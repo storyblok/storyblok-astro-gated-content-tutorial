@@ -8,6 +8,7 @@ const articles = await storyblokApi.getAll("cdn/stories", {
   starts_with: "articles",
   excluding_fields: "body", //We dont need this fielld for the card. saves resources
 });
+console.log(Astro.locals);
 ---
 
 <Layout>
