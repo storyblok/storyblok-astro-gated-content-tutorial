@@ -1,0 +1,15 @@
+---
+interface Props {
+  name: string;
+  id?: string;
+  type: "text" | "password";
+}
+const { name, id, type } = Astro.props;
+---
+
+<input
+  class="outline-none ring-2 rounded flex w-full ring-gray-400 p-2 focus:ring-indigo-600"
+  name={name}
+  id={id || name}
+  type={type}
+/>

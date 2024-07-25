@@ -1,0 +1,28 @@
+---
+import Layout from "~/components/Layout.astro";
+import Input from "~/components/Input.astro";
+import FormButton from "~/components/FormButton.astro";
+---
+
+<Layout>
+  <main class="max-w-lg mx-auto my-20 p-4">
+    <h1 class="text-4xl font-bold mb-4">Sign up</h1>
+    <form id="signup" method="post" action="/api/signup">
+      <label for="name">Name</label>
+      <Input name="name" type="text" /><br />
+      <label for="username">Username</label>
+      <Input name="username" type="text" /><br />
+      <label for="password">Password</label>
+      <Input type="password" name="password" /><br />
+      <FormButton name="Create account" />
+      <p id="form-error" class="text-red-600 mt-2"></p>
+    </form>
+    <p>
+      Already have an account?
+      <a
+        class="mt-4 text-center underline inline-flex hover:text-indigo-600"
+        href="/signin">Signin</a
+      >
+    </p>
+  </main>
+</Layout>
