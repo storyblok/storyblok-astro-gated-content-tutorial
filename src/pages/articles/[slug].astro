@@ -2,6 +2,9 @@
 import Layout from "~/components/Layout.astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 import { useStoryblokApi } from "@storyblok/astro";
+import CommentForm from "~/components/CommentForm.astro";
+import { db, Comment, User, eq } from "astro:db";
+import { DBuuid } from "~/lib/helper";
 
 const { slug } = Astro.params;
 
@@ -13,11 +16,64 @@ const { data } = await storyblokApi.get(`cdn/stories/articles/${slug}`, {
 const story = data.story;
 
 const user = Astro.locals.user;
+//Protect private article
 if (story.content.private && !user) {
   return Astro.redirect("/signin");
+}
+//Get all the comments of this article
+const comments = await db
+  .select({
+    id: Comment.id,
+    publishedAt: Comment.publishedAt,
+    body: Comment.body,
+    name: User.name,
+  })
+  .from(Comment)
+  .where(eq(Comment.articleId, story.uuid))
+  .leftJoin(User, eq(Comment.userId, User.id));
+
+//Create new Comment
+if (Astro.request.method === "POST") {
+  // parse form data
+  const formData = await Astro.request.formData();
+  const body = formData.get("body");
+  if (typeof body === "string" && user) {
+    // insert form data into the Comment table
+    await db.insert(Comment).values({
+      articleId: story.uuid,
+      body,
+      userId: user.id,
+      id: DBuuid(),
+    });
+    return Astro.redirect(Astro.url, 303);
+  }
 }
 ---
 
 <Layout title={story.content.title}>
   <StoryblokComponent blok={story.content} />
+  <div class="max-w-lg mx-auto px-4">
+    {
+      user ? (
+        <CommentForm />
+      ) : (
+        <p class="font-bold text-xl">
+          You have to{" "}
+          <a href="/signin" class="underline text-indigo-600">
+            signin
+          </a>{" "}
+          if you want to comment.
+        </p>
+      )
+    }
+    <h4 class="text-2xl font-bold my-6">Comments[{comments.length}]</h4>
+    {
+      comments.map(({ body, name }) => (
+        <article class="mb-6">
+          <p class="font-medium">{name}</p>
+          <p>{body}</p>
+        </article>
+      ))
+    }
+  </div>
 </Layout>
