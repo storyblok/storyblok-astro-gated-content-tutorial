@@ -1,0 +1,14 @@
+---
+import { storyblokEditable, renderRichText } from "@storyblok/astro";
+
+const { blok } = Astro.props;
+const renderedRichText = renderRichText(blok.body);
+---
+
+<main class="max-w-lg mx-auto my-10 p-4" {...storyblokEditable(blok)}>
+  <span class="bg-gray-800 text-white rounded p-1">
+    {blok.private ? "Private 🔒" : "Public 🌐"}
+  </span>
+  <h1 class="font-bold text-6xl mb-12">{blok.title}</h1>
+  <div set:html={renderedRichText} />
+</main>

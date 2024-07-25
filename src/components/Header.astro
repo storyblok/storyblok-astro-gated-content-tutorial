@@ -1,0 +1,45 @@
+---
+const user = null;
+---
+
+<header class="border-b flex justify-between p-4 gap-4">
+  <a class="text-2xl font-bold" href="/"
+    >Astro Gated Content <span class="ml-4 text-lg font-normal">
+      {user && "Hello " + user.name}
+    </span>
+  </a>
+  <nav class="flex gap-4">
+    <a class="hover:underline hover:text-indigo-600" href="/">Home</a>
+    {
+      user ? (
+        <>
+          <a class="hover:underline hover:text-indigo-600" href="/profile">
+            Profile
+          </a>
+          <form id="signout" method="post" action="/api/signout">
+            <button class="hover:underline hover:text-indigo-600" type="submit">
+              Sign out
+            </button>
+          </form>
+        </>
+      ) : (
+        <a class="hover:underline hover:text-indigo-600" href="/signin">
+          Signin
+        </a>
+      )
+    }
+  </nav>
+</header>
+<script>
+  const signoutForm = document.getElementById("signout");
+  signoutForm &&
+    signoutForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formElement = e.target as HTMLFormElement;
+      await fetch(formElement.action, {
+        method: formElement.method,
+        body: new FormData(formElement),
+      });
+      window.location.href = "/signin";
+    });
+</script>
