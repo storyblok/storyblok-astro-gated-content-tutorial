@@ -3,8 +3,9 @@ interface Props {
   name: string;
   id?: string;
   type: "text" | "password";
+  value?: string;
 }
-const { name, id, type } = Astro.props;
+const { name, id, type, value } = Astro.props;
 ---
 
 <input
@@ -12,5 +13,6 @@ const { name, id, type } = Astro.props;
   name={name}
   id={id || name}
   type={type}
+  value={value}
   required
 />
