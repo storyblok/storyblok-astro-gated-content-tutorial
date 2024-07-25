@@ -2,6 +2,9 @@
 import Layout from "~/components/Layout.astro";
 import Input from "~/components/Input.astro";
 import FormButton from "~/components/FormButton.astro";
+if (Astro.locals.user) {
+  return Astro.redirect("/");
+}
 ---
 
 <Layout>

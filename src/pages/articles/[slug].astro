@@ -11,6 +11,11 @@ const { data } = await storyblokApi.get(`cdn/stories/articles/${slug}`, {
 });
 
 const story = data.story;
+
+const user = Astro.locals.user;
+if (story.content.private && !user) {
+  return Astro.redirect("/signin");
+}
 ---
 
 <Layout title={story.content.title}>

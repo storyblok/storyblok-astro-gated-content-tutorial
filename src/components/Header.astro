@@ -1,5 +1,5 @@
 ---
-const user = null;
+const user = Astro.locals.user;
 ---
 
 <header class="border-b flex justify-between p-4 gap-4">
@@ -36,10 +36,13 @@ const user = null;
     signoutForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const formElement = e.target as HTMLFormElement;
-      await fetch(formElement.action, {
+      const response = await fetch(formElement.action, {
         method: formElement.method,
         body: new FormData(formElement),
       });
-      window.location.href = "/signin";
+      const data = await response.json();
+      if (data.sucess) {
+        window.location.href = "/signin";
+      }
     });
 </script>
