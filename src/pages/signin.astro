@@ -24,3 +24,23 @@ import FormButton from "~/components/FormButton.astro";
     </p>
   </main>
 </Layout>
+<script>
+  const errorMessageElement = document.getElementById("form-error")!;
+  const form = document.getElementById("signin");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorMessageElement.innerText = "";
+    const formElement = e.target as HTMLFormElement;
+    const response = await fetch(formElement.action, {
+      method: formElement.method,
+      body: new FormData(formElement),
+    });
+    const data = await response.json();
+    if (data.sucess) {
+      window.location.href = "/";
+    } else {
+      errorMessageElement.innerText = data.error;
+    }
+  });
+</script>
